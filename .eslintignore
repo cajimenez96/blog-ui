@@ -10,4 +10,4 @@
 **/*.md
 build
 
-.eslintrc.js
+.eslintrc.cjs
