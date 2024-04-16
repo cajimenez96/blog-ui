@@ -13,7 +13,7 @@ module.exports = {
   tailwindConfig: './tailwind.config.js',
   overrides: [
     {
-      files: '.prettierrc',
+      files: '.prettierrc.js',
       options: {
         parser: 'json',
       },
