@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "dev:testing": "vite --mode testing",
     "build": "tsc && vite build",
     "lint": "eslint src --max-warnings=0",
     "lint-fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
