@@ -26,15 +26,15 @@ const Register = () => {
         className="block w-full lg:hidden lg:w-4/12"
       />
 
-      <Card>
-        <CardHeader>
+      <Card className="mt-10">
+        <CardHeader className="mb-10 mt-8">
           <h2 className="mb-10 text-center lg:mr-8 lg:text-end">
-            Ya tienes cuenta?{' '}
+            Ya tienes cuenta?
             <Link className="font-bold text-blue-900" to={'/'}>
               Inicia sesión
             </Link>
           </h2>
-          <CardTitle>Registrarse</CardTitle>
+          <CardTitle className="pb-10">Registrarse</CardTitle>
         </CardHeader>
         <CardContent>
           <form>
@@ -82,7 +82,7 @@ const Register = () => {
             </div>
           </form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="mb-16 mt-10">
           <Button variant="default" size={'lg'}>
             Registrarse
           </Button>
