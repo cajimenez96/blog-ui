@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,57 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { validateInputs } from '@/helper';
+import { FormData } from '@/interfaces/registerInterfaces';
 
-const Register = () => {
+const Register: React.FC = () => {
+  const initialFormData: FormData = {
+    name: '',
+    lastName: '',
+    user: '',
+    nationality: '',
+    phoneNumber: '',
+    address: '',
+    birthdate: '',
+    email: '',
+    password: '',
+    repeatPassword: ''
+  };
+
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [errors, setErrors] = useState<FormData>(initialFormData);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { id, value } = event.target;
+    setFormData({
+      ...formData,
+      [id]: value
+    });
+  };
+
+  const handleRegistro = async () => {
+    const isValid = validateInputs(formData, setErrors);
+    if (!isValid) return;
+
+    const data = {
+      name: formData.name,
+      lastName: formData.lastName,
+      user: formData.user,
+      email: formData.email,
+      password: formData.password,
+      nationality: formData.nationality,
+      phoneNumber: formData.phoneNumber,
+      address: formData.address,
+      birthdate: formData.birthdate
+    };
+
+    console.log('usuario logueado', data);
+  };
+
+  const renderError = (error: string) => {
+    return error ? <h1 className=" text-red-600">{error}</h1> : null;
+  };
+
   return (
     <div className="lg:flex">
       <img
@@ -40,50 +90,99 @@ const Register = () => {
           <form>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="name">Ingrese su nombre</Label>
-              <Input id="name" placeholder="Nombre" />
+              <Input
+                id="name"
+                placeholder="Nombre"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.name)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="lastName">Ingrese su apellido</Label>
-              <Input id="lastName" placeholder="Apellido" />
+              <Input
+                id="lastName"
+                placeholder="Apellido"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.lastName)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="user">Ingrese su usuario</Label>
-              <Input id="user" placeholder="Usuario" />
+              <Input
+                id="user"
+                placeholder="Usuario"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.user)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="email">Ingrese su email</Label>
-              <Input id="email" placeholder="Email" />
+              <Input
+                id="email"
+                placeholder="Email"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.email)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="nationality">Ingrese su nacionalidad</Label>
-              <Input id="nationality" placeholder="Nacionalidad" />
+              <Input
+                id="nationality"
+                placeholder="Nacionalidad"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.nationality)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="phoneNumber">
                 Ingrese su telefono (Opcional)
               </Label>
-              <Input type="number" id="phoneNumber" placeholder="Telefono" />
+              <Input
+                type="number"
+                id="phoneNumber"
+                placeholder="Telefono"
+                onChange={(e) => handleChange(e)}
+              />
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="address">Ingrese su domicilio (Opcional)</Label>
-              <Input id="address" placeholder="Domicilio" />
+              <Input
+                id="address"
+                placeholder="Domicilio"
+                onChange={(e) => handleChange(e)}
+              />
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="birthdate">Ingrese su fecha de nacimiento</Label>
-              <Input type="date" id="birthdate" />
+              <Input
+                type="date"
+                id="birthdate"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.birthdate)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="password">Ingrese una contraseña</Label>
-              <Input id="password" placeholder="Contraseña" />
+              <Input
+                id="password"
+                placeholder="Contraseña"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.password)}
             </div>
             <div className="pb-9 lg:pb-5">
               <Label htmlFor="repeatPassword">Repetir contraseña</Label>
-              <Input id="repeatPassword" placeholder="Contraseña" />
+              <Input
+                id="repeatPassword"
+                placeholder="Contraseña"
+                onChange={(e) => handleChange(e)}
+              />
+              {renderError(errors?.repeatPassword)}
             </div>
           </form>
         </CardContent>
         <CardFooter className="mb-16 mt-10">
-          <Button variant="default" size={'lg'}>
+          <Button onClick={handleRegistro} variant="default" size={'lg'}>
             Registrarse
           </Button>
         </CardFooter>
