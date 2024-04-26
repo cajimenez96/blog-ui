@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,57 +11,36 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { validateInputs } from '@/helper';
-import { FormData } from '@/interfaces/registerInterfaces';
+import { userSchema } from '@/schemas/userSchema';
 
 const Register: React.FC = () => {
-  const initialFormData: FormData = {
-    name: '',
-    lastName: '',
-    user: '',
-    nationality: '',
-    phoneNumber: '',
-    address: '',
-    birthdate: '',
-    email: '',
-    password: '',
-    repeatPassword: ''
-  };
+  const form = useForm<z.infer<typeof userSchema>>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: '',
+      lastName: '',
+      user: '',
+      email: '',
+      nationality: '',
+      birthdate: '',
+      address: '',
+      phoneNumber: '',
+      password: '',
+      repeatPassword: ''
+    }
+  });
 
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [errors, setErrors] = useState<FormData>(initialFormData);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const { id, value } = event.target;
-    setFormData({
-      ...formData,
-      [id]: value
-    });
-  };
-
-  const handleRegistro = async () => {
-    const isValid = validateInputs(formData, setErrors);
-    if (!isValid) return;
-
-    const data = {
-      name: formData.name,
-      lastName: formData.lastName,
-      user: formData.user,
-      email: formData.email,
-      password: formData.password,
-      nationality: formData.nationality,
-      phoneNumber: formData.phoneNumber,
-      address: formData.address,
-      birthdate: formData.birthdate
-    };
-
-    console.log('usuario logueado', data);
-  };
-
-  const renderError = (error: string) => {
-    return error ? <h1 className=" text-red-600">{error}</h1> : null;
+  const handleSubmit = (values: z.infer<typeof userSchema>) => {
+    console.log(values);
   };
 
   return (
@@ -69,123 +50,182 @@ const Register: React.FC = () => {
         alt="imagen de escritorio"
         className="hidden w-full lg:block lg:w-4/12"
       />
-
       <img
         src="https://picsum.photos/2000/500"
         alt="imagen de celular"
         className="block w-full lg:hidden lg:w-4/12"
       />
-
-      <Card className="mt-10">
+      <Card className="mb-20 mt-10">
         <CardHeader className="mb-10 mt-8">
           <h2 className="mb-10 text-center lg:mr-8 lg:text-end">
             Ya tienes cuenta?
             <Link className="font-bold text-blue-900" to={'/'}>
-              Inicia sesión
+              {' '}
+              Inicia sesión{' '}
             </Link>
           </h2>
-          <CardTitle className="pb-10">Registrarse</CardTitle>
+          <CardTitle className="pb-9">Registrarse</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="name">Ingrese su nombre</Label>
-              <Input
-                id="name"
-                placeholder="Nombre"
-                onChange={(e) => handleChange(e)}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-8"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su nombre" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.name)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="lastName">Ingrese su apellido</Label>
-              <Input
-                id="lastName"
-                placeholder="Apellido"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apellido</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su apellido" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.lastName)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="user">Ingrese su usuario</Label>
-              <Input
-                id="user"
-                placeholder="Usuario"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="user"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Usuario</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su usuario" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.user)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="email">Ingrese su email</Label>
-              <Input
-                id="email"
-                placeholder="Email"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su correo" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.email)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="nationality">Ingrese su nacionalidad</Label>
-              <Input
-                id="nationality"
-                placeholder="Nacionalidad"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="nationality"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nacionalidad</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su nacionalidad" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.nationality)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="phoneNumber">
-                Ingrese su telefono (Opcional)
-              </Label>
-              <Input
-                type="number"
-                id="phoneNumber"
-                placeholder="Telefono"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Numero de telefono (opcional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Ingrese su numero de teléfono"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="address">Ingrese su domicilio (Opcional)</Label>
-              <Input
-                id="address"
-                placeholder="Domicilio"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Dirección (opcional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ingrese su dirección" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="birthdate">Ingrese su fecha de nacimiento</Label>
-              <Input
-                type="date"
-                id="birthdate"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="birthdate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha de nacimiento</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        placeholder="Ingrese su fecha de nacimiento"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.birthdate)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="password">Ingrese una contraseña</Label>
-              <Input
-                id="password"
-                placeholder="Contraseña"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Ingrese una contraseña"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.password)}
-            </div>
-            <div className="pb-9 lg:pb-5">
-              <Label htmlFor="repeatPassword">Repetir contraseña</Label>
-              <Input
-                id="repeatPassword"
-                placeholder="Contraseña"
-                onChange={(e) => handleChange(e)}
+              <FormField
+                control={form.control}
+                name="repeatPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Repetir Contraseña</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Repita la contraseña"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              {renderError(errors?.repeatPassword)}
-            </div>
-          </form>
+              <CardFooter>
+                <Button className="mt-9" type="submit">
+                  Registrarse
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
         </CardContent>
-        <CardFooter className="mb-16 mt-10">
-          <Button onClick={handleRegistro} variant="default" size={'lg'}>
-            Registrarse
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );
