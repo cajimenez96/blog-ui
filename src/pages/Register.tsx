@@ -40,7 +40,7 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = (values: z.infer<typeof userSchema>) => {
-    console.log(values);
+    console.log(`Datos enviados ${values}`);
   };
 
   return (
