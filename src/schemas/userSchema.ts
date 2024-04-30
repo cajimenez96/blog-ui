@@ -10,7 +10,9 @@ const {
   passwordError,
   repeatPasswordError,
   birthdateError,
-  nationalityError
+  nationalityError,
+  addressError,
+  phoneError
 } = errorMessages;
 
 export const userSchema = z
@@ -23,6 +25,7 @@ export const userSchema = z
       .max(50, {
         message: nameError
       }),
+
     lastName: z
       .string()
       .min(2, {
@@ -31,9 +34,10 @@ export const userSchema = z
       .max(50, {
         message: lastNameError
       }),
+
     user: z
       .string()
-      .min(2, {
+      .min(3, {
         message: userError
       })
       .max(50, {
@@ -42,22 +46,28 @@ export const userSchema = z
     email: z.string().email({
       message: emailError
     }),
+
     nationality: z
       .string()
-      .min(2, {
+      .min(4, {
         message: nationalityError
       })
-      .max(50, {
+      .max(60, {
         message: nationalityError
       }),
-    address: z.string().optional(),
-    phoneNumber: z.string().optional(),
+
+    address: z.string().max(100, { message: addressError }).optional(),
+
+    phoneNumber: z.string().max(30, { message: phoneError }).optional(),
+
     birthdate: z.string().refine((val) => regex.birthdate.test(val), {
       message: birthdateError
     }),
+
     password: z.string().refine((val) => regex.password.test(val), {
       message: passwordError
     }),
+
     repeatPassword: z.string()
   })
   .refine(
@@ -68,4 +78,8 @@ export const userSchema = z
       message: repeatPasswordError,
       path: ['repeatPassword']
     }
-  );
+  )
+  .refine((values) => !values.address || values.address.length >= 10, {
+    message: addressError,
+    path: ['address']
+  });

@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
+import { createUser } from '@/api/fetchData';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,6 +25,9 @@ import { Input } from '@/components/ui/input';
 import { userSchema } from '@/schemas/userSchema';
 
 const Register: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -39,8 +44,8 @@ const Register: React.FC = () => {
     }
   });
 
-  const handleSubmit = (values: z.infer<typeof userSchema>) => {
-    console.log(`Datos enviados ${values}`);
+  const handleSubmit = async (values: z.infer<typeof userSchema>) => {
+    await createUser(values, setLoading, setError);
   };
 
   return (
@@ -218,10 +223,15 @@ const Register: React.FC = () => {
                   </FormItem>
                 )}
               />
+              {error ? <p className="text-red-600">{error}</p> : ''}
               <CardFooter>
-                <Button className="mt-9" type="submit">
-                  Registrarse
-                </Button>
+                {loading ? (
+                  <div className="size-12 animate-spin rounded-full border-4 border-gray-300 border-t-gray-800"></div>
+                ) : (
+                  <Button className="mt-9" type="submit">
+                    Registrarse
+                  </Button>
+                )}
               </CardFooter>
             </form>
           </Form>
