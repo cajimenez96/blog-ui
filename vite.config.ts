@@ -9,7 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      Axios: path.resolve(__dirname, './src/lib/api/axios.ts')
+      Axios: path.resolve(__dirname, './src/lib/axios.ts')
     }
   }
 });
