@@ -9,7 +9,6 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: 'always',
   jsxBracketSameLine: false,
-  endOfLine: 'crlf',
   tailwindConfig: './tailwind.config.js',
   overrides: [
     {

@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { createUser } from '@/api/fetchData';
+// import { createUser } from '@/api/fetchData';
+// import { RegisterRequest, UserPaths } from '@/api/User';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -24,28 +25,45 @@ import {
 import { Input } from '@/components/ui/input';
 import { userSchema } from '@/schemas/userSchema';
 
-const Register: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+import { RegisterUser } from './require';
 
+const Register: React.FC = () => {
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<string>('');
+
+  //Mover
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       name: '',
       lastName: '',
-      user: '',
+      userName: '',
       email: '',
-      nationality: '',
-      birthdate: '',
+      country: '',
+      birthday: '',
       address: '',
       phoneNumber: '',
       password: '',
-      repeatPassword: ''
+      repeatPassword: '',
+      role: '0'
     }
   });
 
-  const handleSubmit = async (values: z.infer<typeof userSchema>) => {
-    await createUser(values, setLoading, setError);
+  const handleSubmit = (/*values: z.infer<typeof userSchema>*/) => {
+    // await createUser(values, setLoading, setError);
+    RegisterUser({
+      name: 'Emiliano',
+      lastName: 'Gasco',
+      userName: 'Gasco1111Emiliano5',
+      password: 'Test1.!',
+      repeatPassword: 'Test1.!',
+      email: 'e111mi5@gmail.com',
+      phoneNumber: '3865530769',
+      address: 'asdas',
+      country: 'afdsfda',
+      birthday: '05/04/1999',
+      role: '1'
+    });
   };
 
   return (
@@ -71,6 +89,7 @@ const Register: React.FC = () => {
           </h2>
           <CardTitle className="pb-9">Registrarse</CardTitle>
         </CardHeader>
+        <Button onClick={handleSubmit}>holiwis</Button>
         <CardContent>
           <Form {...form}>
             <form
