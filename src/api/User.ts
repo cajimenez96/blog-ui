@@ -8,10 +8,6 @@ export enum UserPaths {
   login = '/login',
   register = '/signup'
 }
-console.log(UserPaths);
-
-// type UserPath = typeof UserPaths;
-// interface UserPath typeof UserPaths;
 
 interface GeneralResponse {
   statusCode: number;

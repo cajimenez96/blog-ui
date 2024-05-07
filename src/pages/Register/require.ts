@@ -1,14 +1,23 @@
 import { RegisterRequest, RegisterRequestPayload, UserPaths } from '@/api/User';
-
 interface RegisterUserResponse {
   code: number;
   message: string;
 }
 
-export const RegisterUser = (
-  form: RegisterRequestPayload
-): RegisterUserResponse => {
-  const response = RegisterRequest(UserPaths.register, form);
-  console.log(response);
-  return { code: 200, message: 'oki' };
+export const RegisterUser = async (
+  form: RegisterRequestPayload,
+  setLoading: (isLoading: boolean) => void
+): Promise<RegisterUserResponse> => {
+  setLoading(true);
+  return await RegisterRequest(UserPaths.register, form)
+    .then((response) => {
+      return { code: response.statusCode, message: response.message };
+    })
+    .catch((error) => {
+      const { response } = error;
+      return { code: response.data.statusCode, message: response.data.message };
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 };

@@ -58,7 +58,11 @@ export const userSchema = z
 
     address: z.string().max(100, { message: addressError }),
 
-    phoneNumber: z.string().max(30, { message: phoneError }),
+    phoneNumber: z
+      .string()
+      .refine((val) => val.length === 0 || regex.phoneNumber.test(val), {
+        message: phoneError
+      }),
 
     birthday: z.string().refine((val) => regex.birthdate.test(val), {
       message: birthdateError
