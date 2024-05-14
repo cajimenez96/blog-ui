@@ -29,7 +29,7 @@ export interface RegisterRequestPayload {
 }
 
 interface RegisterRequestResponse extends GeneralResponse {
-  response: string | undefined;
+  RegisterResponse: string | undefined;
 }
 
 export const RegisterRequest = async (

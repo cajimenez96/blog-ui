@@ -7,7 +7,7 @@ export const errorMessages = {
   emailError: 'Ingrese un correo electrónico válido.',
   emailInUse: 'El correo electrónico ya está en uso. Por favor, ingrese otro.',
   passwordError:
-    'La contraseña debe tener al menos 4 caracteres, un número y un carácter especial.',
+    'La contraseña debe tener al menos 4 caracteres, un número, un carácter especial y una mayúscula.',
   repeatPasswordError: 'Las contraseñas no coinciden.',
   addressError: 'La dirección debe tener de 10 a 100 caracteres.',
   phoneError: 'Ingrese un número de teléfono válido.',

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
@@ -36,6 +36,9 @@ const Register: React.FC = () => {
     state.error,
     state.setError
   ]);
+  useEffect(() => {
+    setError(0);
+  }, []);
 
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
@@ -43,8 +46,7 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof userSchema>) => {
-    const response = await RegisterUser(values, setLoading);
-    setError(response.code);
+    const response = await RegisterUser(values, setLoading, setError);
     response.code === 400 && emailInputRef?.current?.focus();
   };
 
