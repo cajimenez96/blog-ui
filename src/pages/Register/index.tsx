@@ -46,7 +46,8 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof userSchema>) => {
-    const response = await RegisterUser(values, setLoading, setError);
+    const response = await RegisterUser(values, setLoading);
+    setError(response.code);
     response.code === 400 && emailInputRef?.current?.focus();
   };
 
