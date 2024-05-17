@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { createUser } from '@/api/fetchData';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,30 +21,34 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { errorMessages } from '@/constants/errorMessages';
+import { startingValues } from '@/helpers/helper';
 import { userSchema } from '@/schemas/userSchema';
+import useAuthStore from '@/store/useAuthStore';
+
+import { RegisterUser } from './require';
 
 const Register: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading, error, setError] = useAuthStore((state) => [
+    state.loading,
+    state.setLoading,
+    state.error,
+    state.setError
+  ]);
+  useEffect(() => {
+    setError(0);
+  }, []);
 
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
-      name: '',
-      lastName: '',
-      user: '',
-      email: '',
-      nationality: '',
-      birthdate: '',
-      address: '',
-      phoneNumber: '',
-      password: '',
-      repeatPassword: ''
-    }
+    defaultValues: startingValues
   });
 
   const handleSubmit = async (values: z.infer<typeof userSchema>) => {
-    await createUser(values, setLoading, setError);
+    const response = await RegisterUser(values, setLoading);
+    setError(response.code);
+    response.code === 400 && emailInputRef?.current?.focus();
   };
 
   return (
@@ -71,6 +74,7 @@ const Register: React.FC = () => {
           </h2>
           <CardTitle className="pb-9">Registrarse</CardTitle>
         </CardHeader>
+
         <CardContent>
           <Form {...form}>
             <form
@@ -105,7 +109,7 @@ const Register: React.FC = () => {
               />
               <FormField
                 control={form.control}
-                name="user"
+                name="userName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Usuario</FormLabel>
@@ -122,16 +126,21 @@ const Register: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <FormControl>
+                    <FormControl ref={emailInputRef}>
                       <Input placeholder="Ingrese su correo" {...field} />
                     </FormControl>
                     <FormMessage />
+                    {error === 400 && (
+                      <p className=" text-red-600">
+                        {errorMessages.emailInUse}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="nationality"
+                name="country"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nacionalidad</FormLabel>
@@ -174,7 +183,7 @@ const Register: React.FC = () => {
               />
               <FormField
                 control={form.control}
-                name="birthdate"
+                name="birthday"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fecha de nacimiento</FormLabel>
@@ -223,15 +232,17 @@ const Register: React.FC = () => {
                   </FormItem>
                 )}
               />
-              {error ? <p className="text-red-600">{error}</p> : ''}
+              {error === 500 && (
+                <p className=" text-red-600">{errorMessages.serverError}</p>
+              )}
               <CardFooter>
-                {loading ? (
-                  <div className="size-12 animate-spin rounded-full border-4 border-gray-300 border-t-gray-800"></div>
-                ) : (
-                  <Button className="mt-9" type="submit">
-                    Registrarse
-                  </Button>
-                )}
+                <Button className="mt-9" type="submit">
+                  {loading ? (
+                    <div className="size-7 animate-spin rounded-full border-b-2 border-r-2 border-white"></div>
+                  ) : (
+                    <p>Registrarse</p>
+                  )}
+                </Button>
               </CardFooter>
             </form>
           </Form>

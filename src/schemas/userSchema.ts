@@ -35,7 +35,7 @@ export const userSchema = z
         message: lastNameError
       }),
 
-    user: z
+    userName: z
       .string()
       .min(3, {
         message: userError
@@ -47,7 +47,7 @@ export const userSchema = z
       message: emailError
     }),
 
-    nationality: z
+    country: z
       .string()
       .min(4, {
         message: nationalityError
@@ -56,11 +56,15 @@ export const userSchema = z
         message: nationalityError
       }),
 
-    address: z.string().max(100, { message: addressError }).optional(),
+    address: z.string().max(100, { message: addressError }),
 
-    phoneNumber: z.string().max(30, { message: phoneError }).optional(),
+    phoneNumber: z
+      .string()
+      .refine((val) => val.length === 0 || regex.phoneNumber.test(val), {
+        message: phoneError
+      }),
 
-    birthdate: z.string().refine((val) => regex.birthdate.test(val), {
+    birthday: z.string().refine((val) => regex.birthdate.test(val), {
       message: birthdateError
     }),
 
@@ -68,7 +72,8 @@ export const userSchema = z
       message: passwordError
     }),
 
-    repeatPassword: z.string()
+    repeatPassword: z.string(),
+    role: z.string()
   })
   .refine(
     (values) => {
