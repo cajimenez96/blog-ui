@@ -6,7 +6,7 @@ export const regex = {
   phoneNumber: /^[0-9]{10,15}$/
 };
 
-export const startingValues = {
+export const RegisterValues = {
   name: '',
   lastName: '',
   userName: '',
@@ -18,4 +18,9 @@ export const startingValues = {
   password: '',
   repeatPassword: '',
   role: constant.role
+};
+
+export const loginValues = {
+  emailOrUser: '',
+  password: ''
 };
