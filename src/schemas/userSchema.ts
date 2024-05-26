@@ -12,10 +12,21 @@ const {
   birthdateError,
   nationalityError,
   addressError,
-  phoneError
+  phoneError,
+  loginEmailError,
+  loginPasswordError
 } = errorMessages;
 
-export const userSchema = z
+export const loginSchema = z.object({
+  emailOrUser: z.string().min(1, {
+    message: loginEmailError
+  }),
+  password: z.string().min(1, {
+    message: loginPasswordError
+  })
+});
+
+export const registerSchema = z
   .object({
     name: z
       .string()

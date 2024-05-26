@@ -22,8 +22,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { errorMessages } from '@/constants/errorMessages';
-import { startingValues } from '@/helpers/helper';
-import { userSchema } from '@/schemas/userSchema';
+import { RegisterValues } from '@/helpers/helper';
+import { registerSchema } from '@/schemas/userSchema';
 import useAuthStore from '@/store/useAuthStore';
 
 import { RegisterUser } from './require';
@@ -40,12 +40,12 @@ const Register: React.FC = () => {
     setError(0);
   }, []);
 
-  const form = useForm<z.infer<typeof userSchema>>({
-    resolver: zodResolver(userSchema),
-    defaultValues: startingValues
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: RegisterValues
   });
 
-  const handleSubmit = async (values: z.infer<typeof userSchema>) => {
+  const handleSubmit = async (values: z.infer<typeof registerSchema>) => {
     const response = await RegisterUser(values, setLoading);
     setError(response.code);
     response.code === 400 && emailInputRef?.current?.focus();
