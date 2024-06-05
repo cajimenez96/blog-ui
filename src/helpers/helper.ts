@@ -21,6 +21,6 @@ export const RegisterValues = {
 };
 
 export const loginValues = {
-  emailOrUser: '',
+  email: '',
   password: ''
 };

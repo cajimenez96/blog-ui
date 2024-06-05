@@ -21,21 +21,29 @@ export interface RegisterRequestPayload {
   email: string;
   country: string;
   birthday: string;
-  address: string | null;
-  phoneNumber: string | null;
+  address?: string;
+  phoneNumber?: string;
   password: string;
   repeatPassword: string;
   role: string;
 }
 
-interface RegisterRequestResponse extends GeneralResponse {
-  RegisterResponse: string | undefined;
+export interface LoginRequestPayload {
+  email: string;
+  password: string;
 }
 
-export const RegisterRequest = async (
-  request: string,
-  payload: RegisterRequestPayload
-): Promise<RegisterRequestResponse> => {
-  const response = await Axios.post(Paths.USER + request, payload);
+interface RequestResponse extends GeneralResponse {
+  Response?: string;
+}
+
+export const UserRequest = async <T>(
+  request: UserPaths,
+  payload: T
+): Promise<RequestResponse> => {
+  const response = await Axios.post<RequestResponse>(
+    Paths.USER + request,
+    payload
+  );
   return response.data;
 };

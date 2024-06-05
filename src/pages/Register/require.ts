@@ -1,4 +1,7 @@
-import { RegisterRequest, RegisterRequestPayload, UserPaths } from '@/api/User';
+import { useNavigate } from 'react-router-dom';
+
+import { RegisterRequestPayload, UserPaths, UserRequest } from '@/api/User';
+
 interface RegisterUserResponse {
   code: number;
   message: string;
@@ -6,11 +9,13 @@ interface RegisterUserResponse {
 
 export const RegisterUser = async (
   form: RegisterRequestPayload,
-  setLoading: (isLoading: boolean) => void
+  setLoading: (isLoading: boolean) => void,
+  navigate: ReturnType<typeof useNavigate>
 ): Promise<RegisterUserResponse> => {
   setLoading(true);
-  return await RegisterRequest(UserPaths.register, form)
+  return await UserRequest(UserPaths.register, form)
     .then((response) => {
+      navigate('/');
       return { code: response.statusCode, message: response.message };
     })
     .catch((error) => {
