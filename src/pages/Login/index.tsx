@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
@@ -20,8 +21,12 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { errorMessages } from '@/constants/errorMessages';
 import { loginValues } from '@/helpers/helper';
 import { loginSchema } from '@/schemas/userSchema';
+import useAuthStore from '@/store/useAuthStore';
+
+import { LoginUser } from './require';
 
 const Login: React.FC = () => {
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -29,8 +34,19 @@ const Login: React.FC = () => {
     defaultValues: loginValues
   });
 
+  const [loading, setLoading, error, setError] = useAuthStore((state) => [
+    state.loading,
+    state.setLoading,
+    state.error,
+    state.setError
+  ]);
+  useEffect(() => {
+    setError(0);
+  }, []);
+
   const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
-    console.log(values);
+    const response = await LoginUser(values, setLoading);
+    setError(response.code);
   };
 
   return (
@@ -46,10 +62,10 @@ const Login: React.FC = () => {
             No tienes cuenta?
             <Link className="font-bold text-blue-900" to={'/register'}>
               {' '}
-              Registrate{' '}
+              Regístrate{' '}
             </Link>
           </h2>
-          <CardTitle className="pb-9">Iniciar sesion</CardTitle>
+          <CardTitle className="pb-9">Iniciar sesión</CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -60,13 +76,13 @@ const Login: React.FC = () => {
             >
               <FormField
                 control={form.control}
-                name="emailOrUser"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email o usuario</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ingrese su correo o nombre de usuario"
+                        placeholder="Ingrese su correo electrónico"
                         {...field}
                       />
                     </FormControl>
@@ -91,10 +107,16 @@ const Login: React.FC = () => {
                   </FormItem>
                 )}
               />
-
+              {error === 400 && (
+                <p className=" text-red-600">{errorMessages.loginError}</p>
+              )}
               <CardFooter>
                 <Button className="mt-9" type="submit">
-                  Enviar
+                  {loading ? (
+                    <div className="size-7 animate-spin rounded-full border-b-2 border-r-2 border-white"></div>
+                  ) : (
+                    <p>Iniciar sesión</p>
+                  )}
                 </Button>
               </CardFooter>
             </form>

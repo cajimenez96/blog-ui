@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,7 @@ import useAuthStore from '@/store/useAuthStore';
 import { RegisterUser } from './require';
 
 const Register: React.FC = () => {
+  const navigate = useNavigate();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading, error, setError] = useAuthStore((state) => [
     state.loading,
@@ -46,7 +47,7 @@ const Register: React.FC = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof registerSchema>) => {
-    const response = await RegisterUser(values, setLoading);
+    const response = await RegisterUser(values, setLoading, navigate);
     setError(response.code);
     response.code === 400 && emailInputRef?.current?.focus();
   };

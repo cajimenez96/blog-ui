@@ -12,7 +12,6 @@ export const errorMessages = {
   addressError: 'La dirección debe tener entre 10 y 100 caracteres.',
   phoneError: 'Ingrese un número de teléfono válido.',
   serverError: 'Ha ocurrido un error en el servidor.',
-  loginEmailError: 'Ingrese su correo electrónico o nombre de usuario.',
   loginPasswordError: 'Ingrese su contraseña.',
   loginError: 'Credenciales incorrectas.'
 };
